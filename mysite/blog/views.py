@@ -10,13 +10,16 @@ def post_list(request):
                   {'posts': posts})
 
 
-def post_detail(request, post_id):
-    """RETRIEVE - получение поста по id."""
+def post_detail(request, year, month, day, post_slug):
+    """RETRIEVE - получение поста по дате и слагу."""
 
     post = get_object_or_404(
         Post,
-        id=post_id,
-        status=Post.Status.PUBLISHED)
+        status=Post.Status.PUBLISHED,
+        slug=post_slug,
+        publish__year=year,
+        publish__month=month,
+        publish__day=day)
 
     return render(request,
                   'blog/post/detail.html',
