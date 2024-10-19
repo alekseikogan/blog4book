@@ -60,7 +60,7 @@ def post_share(request, post_id):
         form = EmailPostForm(request.POST)
         if form.is_valid():  # form.errors список ошибок
             cd = form.cleaned_data  # cleaned_data это словарь значений, которые прошли валидацию
-            post_url = request.build_absolute_url(
+            post_url = request.build_absolute_uri(
                 post.get_absolute_url())
             subject = f"{cd['name']} совертует почитать пост " \
                 f"{post.title}"
