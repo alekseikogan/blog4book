@@ -71,7 +71,7 @@ def post_share(request, post_id):
             cd = form.cleaned_data  # cleaned_data это словарь значений, которые прошли валидацию
             post_url = request.build_absolute_uri(
                 post.get_absolute_url())
-            subject = f"{cd['name']} совертует почитать пост " \
+            subject = f"{cd['name']} советует прочитать пост " \
                 f"{post.title}"
             message = f"Посмотри пост {post.title}! Вот ссылка - {post_url}\n\n" \
                 f"{cd['name']}\' передает: {cd['comments']}"
