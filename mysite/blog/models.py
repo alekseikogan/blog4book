@@ -70,3 +70,25 @@ class Post(models.Model):
 
     def __str__(self):
         return self.title
+
+
+class Comment(models.Model):
+    post = models.ForeignKey(Post,
+                             on_delete=models.CASCADE,
+                             related_name='comments')
+    name = models.CharField(max_length=80, verbose_name='Ваше имя')
+    email = models.EmailField(verbose_name='e-mail')
+    body = models.TextField(verbose_name='Комментарий')
+    created = models.DateTimeField(auto_now_add=True)
+    updated = models.DateTimeField(auto_now=True)
+    active = models.BooleanField(default=True)
+
+    class Meta:
+        verbose_name = 'Комментарий'
+        verbose_name_plural = 'Комментарии'
+        ordering = ['created']
+        indexes = [
+            models.Index(fields=['created']),]
+
+    def __str__(self):
+        return f'Комментарий {self.name} для поста {self.post}'
