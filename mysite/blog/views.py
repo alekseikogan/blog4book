@@ -67,18 +67,9 @@ def post_detail(request, year, month, day, post_slug):
     post_tags_ids = post.tags.values_list('id', flat=True)
     similar_posts = Post.published.filter(tags__in=post_tags_ids)\
                                             .exclude(id=post.id)
-    for post in similar_posts:
-        print(f'Пост - {post}')
-        for tag in post.tags.values_list('id', 'name'):
-            print(f'Тег - {tag}', end='|')
-        print('-------')
     # similar_posts - число тегов, общих со всеми запрошенными тегами
     similar_posts = similar_posts.annotate(same_tags=Count('tags'))\
                                 .order_by('-same_tags', '-publish')[:4]
-    for post in similar_posts:
-        print(f'Пост - {post}')
-        print(f'same_tags - {post.same_tags}')
-
 
     return render(request,
                   'blog/post/detail.html',
