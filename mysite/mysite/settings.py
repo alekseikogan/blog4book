@@ -4,6 +4,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 SECRET_KEY = 'django-insecure-tjjo&e&@03k%)q$akq1=citdk-1a48_cm)1u$kard)%9_rc8h8'
 
+SITE_ID = 1
 
 DEBUG = True
 
@@ -16,6 +17,9 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    
+    'django.contrib.sites',
+    'django.contrib.sitemaps',
 
     'taggit',
 

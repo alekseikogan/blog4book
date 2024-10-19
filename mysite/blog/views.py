@@ -1,20 +1,20 @@
 from django.core.mail import send_mail
 from django.core.paginator import EmptyPage, PageNotAnInteger, Paginator
+from django.db.models import Count
 from django.shortcuts import get_object_or_404, render
 from django.views.decorators.http import require_POST
 from django.views.generic import ListView
-from django.db.models import Count
-
 from taggit.models import Tag
 
 from .forms import CommentForm, EmailPostForm
-from .models import Comment, Post
+from .models import Post
 
+POST_PER_PAGE = 4
 
 class PostListView(ListView):
     queryset = Post.published.all()
     context_object_name = 'posts'  # результат запроса в бд, по умочанию назвается object_list
-    paginate_by = 3
+    paginate_by = POST_PER_PAGE
     template_name = 'blog/post/list.html'
 
     # тут пагинатор отдает объект страницы с именем page_obj
@@ -32,7 +32,7 @@ def post_list(request, tag_slug=None):
         # списке, который в данном случае содержит только один элемент.
         # используется операция __in поиска по полю
         post_list = post_list.filter(tags__in=[tag])
-    paginator = Paginator(post_list, 3)
+    paginator = Paginator(post_list, POST_PER_PAGE)
     page_number = request.GET.get('page', 1)
 
     try:
