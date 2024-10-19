@@ -3,6 +3,8 @@ from django.db import models
 from django.urls import reverse
 from django.utils import timezone
 
+from taggit.managers import TaggableManager
+
 
 class PublishedManager(models.Manager):
     """Переопределение менеджера объектов для 
@@ -47,6 +49,7 @@ class Post(models.Model):
         choices=Status.choices,
         default=Status.DRAFT,
         verbose_name='Статус')
+    tags = TaggableManager()
     
     objects = models.Manager()
     published = PublishedManager()
