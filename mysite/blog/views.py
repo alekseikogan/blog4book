@@ -1,4 +1,5 @@
 from django.core.paginator import EmptyPage, PageNotAnInteger, Paginator
+from django.core.mail import send_mail
 from django.shortcuts import get_object_or_404, render
 from django.views.generic import ListView
 
@@ -54,14 +55,24 @@ def post_share(request, post_id):
     post = get_object_or_404(Post,
                              id=post_id,
                              status=Post.Status.PUBLISHED)
+    sent = False
     if request.method == 'POST':
         form = EmailPostForm(request.POST)
         if form.is_valid():  # form.errors список ошибок
             cd = form.cleaned_data  # cleaned_data это словарь значений, которые прошли валидацию
+            post_url = request.build_absolute_url(
+                post.get_absolute_url())
+            subject = f"{cd['name']} совертует почитать пост " \
+                f"{post.title}"
+            message = f"Посмотри пост {post.title}! Вот ссылка - {post_url}\n\n" \
+                f"{cd['name']}\' передает: {cd['comments']}"
+            send_mail(subject, message, 'your_account@gmail.com', [cd['to']])
+            sent = True
     else:
         form = EmailPostForm()
 
     return render(
         request,
         'blog/post/share.html', {'post': post,
-                                 'form': form})
+                                 'form': form,
+                                 'sent': sent})
