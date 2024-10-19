@@ -3,6 +3,7 @@ from django.core.paginator import EmptyPage, PageNotAnInteger, Paginator
 from django.shortcuts import get_object_or_404, render
 from django.views.decorators.http import require_POST
 from django.views.generic import ListView
+from django.db.models import Count
 
 from taggit.models import Tag
 
@@ -61,12 +62,30 @@ def post_detail(request, year, month, day, post_slug):
     comments = post.comments.filter(active=True)
     form = CommentForm()
 
+    # возвращает кортежи со значениями заданных полей. Ему передается параметр flat=True, чтобы 
+    # получить одиночные значения
+    post_tags_ids = post.tags.values_list('id', flat=True)
+    similar_posts = Post.published.filter(tags__in=post_tags_ids)\
+                                            .exclude(id=post.id)
+    for post in similar_posts:
+        print(f'Пост - {post}')
+        for tag in post.tags.values_list('id', 'name'):
+            print(f'Тег - {tag}', end='|')
+        print('-------')
+    # similar_posts - число тегов, общих со всеми запрошенными тегами
+    similar_posts = similar_posts.annotate(same_tags=Count('tags'))\
+                                .order_by('-same_tags', '-publish')[:4]
+    for post in similar_posts:
+        print(f'Пост - {post}')
+        print(f'same_tags - {post.same_tags}')
+
 
     return render(request,
                   'blog/post/detail.html',
                   {'post': post,
                    'comments': comments,
-                   'form': form})
+                   'form': form,
+                   'similar_posts': similar_posts})
 
 
 def post_share(request, post_id):

@@ -3,9 +3,11 @@
 
 {% block content %}
     <h1>Свежие публикации</h1>
+
     {% if tag %}
         <h2>Посты с тэгом "{{ tag.name }}"</h2>
     {% endif %}
+
     {% for post in posts %}
         <h2>
             <a href="{{ post.get_absolute_url }}">
