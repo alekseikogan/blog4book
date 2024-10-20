@@ -1,4 +1,6 @@
 {% extends "blog/base.html" %}
+{% load blog_tags %}
+
 {% block title %}
     {{ post.title }}
 {% endblock %}
@@ -13,7 +15,7 @@
         Автор: {{ post.author }}
     </p>
     <hr>
-    {{ post.body|linebreaks }}
+    {{ post.body|markdown }}
     <hr>
     <p>
         <a href="{% url "blog:post_share" post.id %}">
