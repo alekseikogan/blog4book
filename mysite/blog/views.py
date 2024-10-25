@@ -3,6 +3,7 @@ from django.core.mail import send_mail
 from django.core.paginator import EmptyPage, PageNotAnInteger, Paginator
 from django.db.models import Count
 from django.shortcuts import get_object_or_404, render
+from django.template import RequestContext
 from django.views.decorators.http import require_POST
 from django.views.generic import ListView
 from taggit.models import Tag
@@ -134,7 +135,7 @@ def post_comment(request, post_id):
 def post_search(request):
     """Поиск по вектору полей title и body."""
 
-    form = SearchForm
+    form = SearchForm()
     query = None
     results = []
 
@@ -146,8 +147,8 @@ def post_search(request):
                 search=SearchVector('title', 'body'),
             ).filter(search=query)
         
-        return render(request,
-                      'blog/post/search.html',
-                      {'form': form,
-                       'query': query,
-                       'results': results})
+    return render(request,
+                  'blog/post/search.html',
+                  {'form': form,
+                   'query': query,
+                   'results': results},)
