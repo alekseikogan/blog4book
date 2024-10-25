@@ -6,7 +6,7 @@
         <h1>Посты, содержащие "{{ query }}"</h1>
         <h3>
             {% with results.count as total_results %}
-                Найдено {{ total_results }} результатов
+                Найдено результатов: {{ total_results }} 
             {% endwith %}
         </h3>
         {% for post in results %}

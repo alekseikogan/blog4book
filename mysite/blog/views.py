@@ -139,7 +139,7 @@ def post_search(request):
     query = None
     results = []
 
-    if query in request.GET:
+    if 'query' in request.GET:
         form = SearchForm(request.GET)
         if form.is_valid():
             query = form.cleaned_data['query']
